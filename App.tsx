@@ -25,10 +25,6 @@ export default function App() {
     }
   }, [selectedCategory]);
 
-  useEffect(() => {
-    handleConversion();
-  }, [inputValue, fromUnit, toUnit, selectedCategory]);
-
   const handleConversion = () => {
     if (inputValue === '' || fromUnit === '' || toUnit === '') {
       setConvertedResult('');
@@ -67,7 +63,11 @@ export default function App() {
       {/* Category Selection */}
       <View style={styles.section}>
         <Text style={styles.label}>Select Category:</Text>
-        <View style={styles.categoryButtons}>
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.categoryButtons}
+        >
           {categories.map((category) => (
             <TouchableOpacity
               key={category}
@@ -75,6 +75,7 @@ export default function App() {
                 styles.categoryButton,
                 selectedCategory === category && styles.selectedCategoryButton,
               ]}
+              activeOpacity={0.8}
               onPress={() => setSelectedCategory(category)}
             >
               <Text
@@ -87,7 +88,7 @@ export default function App() {
               </Text>
             </TouchableOpacity>
           ))}
-        </View>
+        </ScrollView>
       </View>
 
       {/* Input Section */}
@@ -136,6 +137,17 @@ export default function App() {
         </View>
       </View>
 
+      {/* Convert Button */}
+      <View style={styles.convertButtonContainer}>
+        <TouchableOpacity
+          style={styles.convertButton}
+          activeOpacity={0.85}
+          onPress={handleConversion}
+        >
+          <Text style={styles.convertButtonText}>Convert</Text>
+        </TouchableOpacity>
+      </View>
+
       {/* Result Display */}
       <View style={styles.resultContainer}>
         <Text style={styles.resultLabel}>Result:</Text>
@@ -150,103 +162,176 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: 'linear-gradient(180deg, #e0eafc 0%, #cfdef3 100%)', // fallback for RN: use backgroundColor
+    backgroundColor: '#e0eafc',
   },
   contentContainer: {
-    padding: 20,
+    padding: 24,
     paddingTop: 60,
+    minHeight: '100%',
   },
   title: {
-    fontSize: 32,
+    fontSize: 38,
     fontWeight: 'bold',
-    marginBottom: 30,
+    marginBottom: 36,
     textAlign: 'center',
-    color: '#333',
+    color: '#1a237e',
+    letterSpacing: 1.2,
+    textShadowColor: '#b3c6ff',
+    textShadowOffset: { width: 0, height: 2 },
+    textShadowRadius: 8,
   },
   section: {
-    marginBottom: 25,
+    marginBottom: 28,
     backgroundColor: '#fff',
-    borderRadius: 10,
-    padding: 15,
+    borderRadius: 18,
+    padding: 20,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
-    elevation: 3,
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.13,
+    shadowRadius: 12,
+    elevation: 6,
+    borderWidth: 1,
+    borderColor: '#e3e8f0',
   },
   label: {
-    fontSize: 18,
-    marginBottom: 10,
-    color: '#555',
-    fontWeight: '600',
+    fontSize: 20,
+    marginBottom: 12,
+    color: '#3949ab',
+    fontWeight: '700',
+    letterSpacing: 0.5,
   },
   input: {
-    height: 50,
-    borderColor: '#ddd',
-    borderWidth: 1,
-    borderRadius: 8,
-    paddingHorizontal: 15,
-    fontSize: 20,
-    backgroundColor: '#f9f9f9',
+    height: 56,
+    borderColor: '#b3c6ff',
+    borderWidth: 2,
+    borderRadius: 12,
+    paddingHorizontal: 18,
+    fontSize: 22,
+    backgroundColor: '#f4f8fb',
+    color: '#222',
+    fontWeight: '600',
+    shadowColor: '#b3c6ff',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 4,
   },
   pickerContainer: {
-    borderColor: '#ddd',
-    borderWidth: 1,
-    borderRadius: 8,
+    borderColor: '#b3c6ff',
+    borderWidth: 2,
+    borderRadius: 12,
     overflow: 'hidden',
-    backgroundColor: '#f9f9f9',
+    backgroundColor: '#f4f8fb',
+    marginBottom: 2,
+    shadowColor: '#b3c6ff',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 4,
   },
   picker: {
-    height: 50,
+    height: 56,
     width: '100%',
   },
   pickerItem: {
-    fontSize: 18,
+    fontSize: 20,
+    color: '#222',
+    fontWeight: '500',
   },
   resultContainer: {
-    marginTop: 30,
-    padding: 20,
-    backgroundColor: '#e6ffe6',
-    borderRadius: 10,
-    borderWidth: 1,
+    marginTop: 36,
+    padding: 28,
+    backgroundColor: '#e3ffe6',
+    borderRadius: 18,
+    borderWidth: 2,
     borderColor: '#a0e0a0',
     alignItems: 'center',
     justifyContent: 'center',
+    shadowColor: '#a0e0a0',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.13,
+    shadowRadius: 8,
+    elevation: 4,
   },
   resultLabel: {
-    fontSize: 22,
+    fontSize: 26,
     fontWeight: 'bold',
-    marginBottom: 10,
-    color: '#28a745',
+    marginBottom: 12,
+    color: '#388e3c',
+    letterSpacing: 0.5,
   },
   resultText: {
-    fontSize: 28,
+    fontSize: 36,
     fontWeight: 'bold',
-    color: '#007bff',
+    color: '#1976d2',
     textAlign: 'center',
+    letterSpacing: 1.2,
+    textShadowColor: '#b3c6ff',
+    textShadowOffset: { width: 0, height: 2 },
+    textShadowRadius: 8,
   },
   categoryButtons: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-around',
-    marginTop: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 12,
+    paddingVertical: 4,
+    paddingHorizontal: 2,
   },
   categoryButton: {
-    paddingVertical: 10,
-    paddingHorizontal: 15,
-    borderRadius: 20,
-    backgroundColor: '#e0e0e0',
-    margin: 5,
+    paddingVertical: 12,
+    paddingHorizontal: 28,
+    borderRadius: 30,
+    backgroundColor: '#f4f8fb',
+    marginHorizontal: 4,
+    marginVertical: 4,
+    borderWidth: 2,
+    borderColor: '#b3c6ff',
+    shadowColor: '#b3c6ff',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.09,
+    shadowRadius: 4,
+    elevation: 2,
   },
   selectedCategoryButton: {
-    backgroundColor: '#007bff',
+    backgroundColor: '#1976d2',
+    borderColor: '#1976d2',
+    shadowColor: '#1976d2',
+    elevation: 4,
   },
   categoryButtonText: {
-    color: '#333',
-    fontSize: 16,
-    fontWeight: '500',
+    color: '#3949ab',
+    fontSize: 18,
+    fontWeight: '600',
+    letterSpacing: 0.5,
   },
   selectedCategoryButtonText: {
     color: '#fff',
+    fontWeight: '700',
+    letterSpacing: 0.5,
+  },
+  convertButtonContainer: {
+    alignItems: 'center',
+    marginTop: 18,
+    marginBottom: 8,
+  },
+  convertButton: {
+    width: '80%',
+    paddingVertical: 18,
+    borderRadius: 32,
+    backgroundColor: '#1976d2',
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#1976d2',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.18,
+    shadowRadius: 8,
+    elevation: 6,
+  },
+  convertButtonText: {
+    color: '#fff',
+    fontSize: 22,
+    fontWeight: 'bold',
+    letterSpacing: 1,
+    textTransform: 'uppercase',
   },
 });
